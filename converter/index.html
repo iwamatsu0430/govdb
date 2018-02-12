@@ -1,0 +1,163 @@
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Data Converter</title>
+  <style>
+    main {
+      display: flex;
+    }
+    main > div {
+      width: 100%;
+      text-align: center;
+    }
+    main > div > textarea {
+      width: 100%;
+      height: 90%;
+    }
+    main > div > textarea:focus {
+      outline: none;
+    }
+  </style>
+  <script>
+    const items = [
+      { tableName: 'corporate_counts', displayName: '企業数', idName: 'corporate_count_id' },
+      { tableName: 'office_counts', displayName: '事業所数', idName: 'office_count_id' },
+      { tableName: 'regular_employee_counts', displayName: '常時従業者数', idName: 'regular_employee_count_id' },
+      { tableName: 'sales', displayName: '売上高', idName: 'sale_id' },
+      { tableName: 'office_per_corporate_counts', displayName: '一企業当たり事業所数', idName: 'office_per_corporate_count_id' },
+      { tableName: 'head_office_counts', displayName: '本社・本店事業所数', idName: 'head_office_count_id' },
+      { tableName: 'branch_office_counts', displayName: '本社・本店以外の事業所数', idName: 'branch_office_count_id' },
+      { tableName: 'domestic_office_counts', displayName: '国内の事業所数', idName: 'domestic_office_count_id' },
+      { tableName: 'oversea_office_counts', displayName: '海外の事業所数', idName: 'oversea_office_count_id' },
+      { tableName: 'fulltime_employee_counts', displayName: '正社員数', idName: 'fulltime_employee_count_id' },
+      { tableName: 'parttime_employee_counts', displayName: 'パート数', idName: 'parttime_employee_count_id' },
+      { tableName: 'dispatch_employee_counts', displayName: '受入れ派遣従業者数', idName: 'dispatch_employee_count_id' },
+      { tableName: 'regular_employee_per_corporate_counts', displayName: '一企業当たり常時従業者数', idName: 'regular_employee_per_corporate_count_id' },
+      { tableName: 'fulltime_employee_per_corporate_counts', displayName: '一企業当たり正社員数', idName: 'fulltime_employee_per_corporate_count_id' },
+      { tableName: 'parttime_employee_per_corporate_counts', displayName: '一企業当たりパート数', idName: 'parttime_employee_per_corporate_count_id' },
+      { tableName: 'dispatch_employee_per_corporate_counts', displayName: '一企業当たり受入れ派遣従業者数', idName: 'dispatch_employee_per_corporate_count_id' },
+      { tableName: 'sale_per_corporates', displayName: '一企業当たり売上高', idName: 'sale_per_corporate_id' },
+      { tableName: 'operating_profit_per_corporates', displayName: '一企業当たり営業利益', idName: 'operating_profit_per_corporate_id' },
+      { tableName: 'recurring_profit_per_corporates', displayName: '一企業当たり経常利益', idName: 'recurring_profit_per_corporate_id' },
+      { tableName: 'net_income_per_corporates', displayName: '一企業当たり当期純利益', idName: 'net_income_per_corporate_id' },
+      { tableName: 'total_assets_per_corporates', displayName: '一企業当たり総資産', idName: 'total_assets_per_corporate_id' },
+      { tableName: 'net_assets_per_corporates', displayName: '一企業当たり純資産', idName: 'net_assets_per_corporate_id' },
+      { tableName: 'added_value_per_corporates', displayName: '一企業当たり付加価値額', idName: 'added_value_per_corporate_id' },
+      { tableName: 'labor_share_per_corporates', displayName: '一企業当たり労働分配率', idName: 'labor_share_per_corporate_id' },
+      { tableName: 'lobor_productivity_per_corporates', displayName: '一企業当たり労働生産性', idName: 'lobor_productivity_per_corporate_id' },
+      { tableName: 'total_operating_expenses_per_corporates', displayName: '一企業当たり営業費用計', idName: 'total_operating_expenses_per_corporate_id' },
+      { tableName: 'cost_of_sales_per_corporates', displayName: '一企業当たり売上原価', idName: 'cost_of_sales_per_corporate_id' },
+      { tableName: 'sga_expenses_per_corporates', displayName: '一企業当たり販売費及び一般管理費', idName: 'sga_expenses_per_corporate_id' },
+      { tableName: 'advertising_expenses_per_corporates', displayName: '一企業当たり広告宣伝費', idName: 'advertising_expenses_per_corporate_id' },
+      { tableName: 'pt_expenses_per_corporates', displayName: '一企業当たり荷造運搬費', idName: 'pt_expenses_per_corporate_id' },
+      { tableName: 'depreciation_per_corporates', displayName: '一企業当たり減価償却費', idName: 'depreciation_per_corporate_id' },
+      { tableName: 'payroll_per_corporates', displayName: '一企業当たり給与総額', idName: 'payroll_per_corporate_id' },
+      { tableName: 'welfare_expenses_per_corporates', displayName: '一企業当たり福利厚生費', idName: 'welfare_expenses_per_corporate_id' },
+      { tableName: 'rent_expenses_per_corporates', displayName: '一企業当たり動産・不動産賃借料', idName: 'rent_expenses_per_corporate_id' },
+      { tableName: 'taxes_and_dues_per_corporates', displayName: '一企業当たり租税公課', idName: 'taxes_and_dues_per_corporate_id' },
+      { tableName: 'communication_expenses_per_corporates', displayName: '一企業当たり情報処理通信費', idName: 'communication_expenses_per_corporate_id' },
+      { tableName: 'lease_expenses_per_corporates', displayName: '一企業当たり支払リース料', idName: 'lease_expenses_per_corporate_id' },
+      { tableName: 'interest_expenses_per_corporates', displayName: '一企業当たり支払利息等', idName: 'interest_expenses_per_corporate_id' },
+    ];
+
+    const industoryIds = [1000,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,3000,3001,3002,4000,4001,4002,4003,4004,4005,4006,5000,5001,5002,5003,5004,5005,5006,5007,5008,5009,5010,5011,5012,5013,5014,5015,5016,5017,5018,6000,6001,6002,6003,6004,6005,6006,6007,6008,6009,7000,8000,9000,10000,11000,12000,13000];
+  </script>
+</head>
+<body>
+  <header>
+    <select id="year-selector">
+      <option value="2016">2016(平成28年)</option>
+      <option value="2015">2015(平成27年)</option>
+      <option value="2014">2014(平成26年)</option>
+      <option value="2013">2013(平成25年)</option>
+      <option value="2012">2012(平成24年)</option>
+      <option value="2011">2011(平成23年)</option>
+      <option value="2010">2010(平成22年)</option>
+      <option value="2009">2009(平成21年)</option>
+      <option value="2008">2008(平成20年)</option>
+      <option value="2007">2007(平成19年)</option>
+    </select>
+    <select id="item-selector"></select>
+    <button id="convert-button">convert</button>
+    <button id="copy-button">copy</button>
+  </header>
+  <main>
+    <div>
+      <textarea id="raw-textarea"></textarea>
+    </div>
+    <div>
+      <textarea id="cvt-textarea"></textarea>
+    </div>
+  </main>
+</body>
+<script>
+  const yearSelector = document.querySelector('#year-selector');
+  const itemSelector = document.querySelector('#item-selector');
+  const rawTextarea = document.querySelector('#raw-textarea');
+  const cvtTextarea = document.querySelector('#cvt-textarea');
+  const convertButton = document.querySelector('#convert-button');
+  const copyButton = document.querySelector('#copy-button');
+
+  function execCopy(string){
+    var temp = document.createElement('div');
+
+    temp.appendChild(document.createElement('pre')).textContent = string;
+
+    var s = temp.style;
+    s.position = 'fixed';
+    s.left = '-100%';
+
+    document.body.appendChild(temp);
+    document.getSelection().selectAllChildren(temp);
+
+    var result = document.execCommand('copy');
+
+    document.body.removeChild(temp);
+    // true なら実行できている falseなら失敗か対応していないか
+    return result;
+  }
+
+  items.forEach(i => {
+    let newOption = document.createElement('option');
+    newOption.setAttribute('value', i.tableName);
+    newOption.innerHTML = i.displayName;
+    itemSelector.appendChild(newOption);
+  });
+
+  convertButton.addEventListener('click', e => {
+    e.preventDefault();
+
+    const values = rawTextarea.value.replace(/,/g, '').replace(/ /g, '').replace(/-\n/g, '0\n').trim();
+    const rows = values.split('\n');
+    if (rows.length != 72) {
+      console.log(`invalid row length!: ${rows.length}`);
+      return;
+    }
+
+    let index = 0;
+    let cvtRows = [];
+    rows.forEach(row => {
+      cvtRows.push(`(NULL, '${row}', '${yearSelector.value}', '${industoryIds[index]}', '0', '2018-02-01 00:00:00')`);
+      index++;
+    });
+
+    const targetItem = items.find(i => i.tableName === itemSelector.value);
+    const output = `INSERT INTO \`${targetItem.tableName}\`
+  (\`${targetItem.idName}\`, \`value\`, \`year\`, \`industory_id\`, \`created_by\`, \`created_at\`)
+VALUES
+  ${cvtRows.join(',\n  ')}
+;
+
+
+`;
+
+    cvtTextarea.value = output;
+    execCopy(output);
+  });
+
+  copyButton.addEventListener('click', e => {
+    e.preventDefault();
+    execCopy(cvtTextarea.value);
+  });
+</script>
+</html>

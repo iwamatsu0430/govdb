@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  govdb-db:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: "root"
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./sql/docker:/docker-entrypoint-initdb.d
+
+  govdb-flyway:
+    image: boxfuse/flyway
+    command: -url=jdbc:mysql://govdb-db -schemas=govdb -user=root -password=root migrate
+    depends_on:
+      - govdb-db
+    volumes:
+      - ./sql/flyway:/flyway/sql
+
+  govdb-metabase:
+    image: metabase/metabase
+    depends_on:
+      - govdb-db
+    ports:
+      - "3000:3000"
